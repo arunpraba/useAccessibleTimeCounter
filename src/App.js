@@ -29,9 +29,10 @@ export const formatSecondsToMinutes = (time) => {
   } ${seconds} ${secondsValue}`;
 };
 
-const updateIntervalGap = 20;
-
-const useAccessibleScreenReaderTimeCounter = (timer) => {
+const useAccessibleScreenReaderTimeCounter = ({
+  timer,
+  updateIntervalGap = 30
+}) => {
   const [{ ariaLive, ariaAtomic }, setAriaValue] = useState({
     ariaLive: "off",
     ariaAtomic: "false"
@@ -43,7 +44,7 @@ const useAccessibleScreenReaderTimeCounter = (timer) => {
     } else if (timer % updateIntervalGap === 1) {
       setAriaValue({ ariaLive: "off", ariaAtomic: "false" });
     }
-  }, [timer]);
+  }, [timer, updateIntervalGap]);
 
   const label = formatSecondsToMinutes(timer);
   return { role: "timer", label, ariaLive, ariaAtomic };
@@ -58,7 +59,7 @@ export default function App() {
     role,
     label,
     ariaLive
-  } = useAccessibleScreenReaderTimeCounter(timer);
+  } = useAccessibleScreenReaderTimeCounter({ timer, updateIntervalGap: 30 });
 
   const onClick = () => {
     setIsStarted(true);
